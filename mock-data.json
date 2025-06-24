@@ -1,0 +1,51 @@
+[
+  {
+    "name": "Spaghetti Carbonara",
+    "ingredients": ["spaghetti", "eggs", "cheese", "pancetta", "pepper"],
+    "origin": "Italy",
+    "diet": "Non-vegetarian",
+    "culture": "A classic Roman dish known for its creamy texture and rich flavors."
+  },
+  {
+    "name": "Tacos al Pastor",
+    "ingredients": ["corn tortillas", "marinated pork", "pineapple", "onions", "cilantro"],
+    "origin": "Mexico",
+    "diet": "Non-vegetarian",
+    "culture": "A popular street food with a blend of indigenous and Middle Eastern influences."
+  },
+  {
+    "name": "Biryani",
+    "ingredients": ["basmati rice", "meat (chicken/lamb)", "yogurt", "spices"],
+    "origin": "India",
+    "diet": "Non-vegetarian",
+    "culture": "A fragrant rice dish layered with marinated meat, often served at celebrations."
+  },
+  {
+    "name": "Falafel",
+    "ingredients": ["chickpeas", "herbs", "spices", "tahini", "pita bread"],
+    "origin": "Middle East",
+    "diet": "Vegetarian",
+    "culture": "A staple in Middle Eastern cuisine, often served in pita with fresh vegetables."
+  },
+  {
+    "name": "Ratatouille",
+    "ingredients": ["zucchini", "eggplant", "bell peppers", "tomatoes", "herbs"],
+    "origin": "France",
+    "diet": "Vegetarian",
+    "culture": "A rustic Provençal dish that celebrates seasonal vegetables."
+  },
+    {
+      "name": "Pad Thai",
+      "ingredients": ["rice noodles", "tofu", "bean sprouts", "peanuts", "egg"],
+      "origin": "Thailand",
+      "diet": "Vegetarian-friendly",
+      "culture": "Popular Thai street food with sweet, sour, and salty notes."
+    },
+    {
+      "name": "Sushi",
+      "ingredients": ["vinegared rice", "raw fish", "seaweed", "vegetables"],
+      "origin": "Japan",
+      "diet": "Pescatarian",
+      "culture": "A refined art form in Japanese cuisine with deep cultural rituals."
+    }
+  ]
