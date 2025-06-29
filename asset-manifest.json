@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/Global-Food-Wiki/static/css/main.68ee2c5f.css",
+    "main.js": "/Global-Food-Wiki/static/js/main.b7c3f563.js",
+    "static/js/453.96453769.chunk.js": "/Global-Food-Wiki/static/js/453.96453769.chunk.js",
+    "index.html": "/Global-Food-Wiki/index.html",
+    "main.68ee2c5f.css.map": "/Global-Food-Wiki/static/css/main.68ee2c5f.css.map",
+    "main.b7c3f563.js.map": "/Global-Food-Wiki/static/js/main.b7c3f563.js.map",
+    "453.96453769.chunk.js.map": "/Global-Food-Wiki/static/js/453.96453769.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.68ee2c5f.css",
+    "static/js/main.b7c3f563.js"
+  ]
+}
