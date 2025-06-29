@@ -1,0 +1,76 @@
+/* Start of header CSS */
+  .app-header {
+    position: relative; /* Positioning for feedback link */
+    background-color: #283618;
+    padding: 20px; /*adds 20 px on all sides*/
+    text-align: center; /*centers inline content in header*/
+  }
+
+  .logo {
+    height: 60px;
+    max-width: 80%;
+    object-fit: contain;
+  }
+
+  .feedback-link{
+    position: absolute; /*keeps out of normal page flow*/
+    top: 40px;
+    right: 20px; /*pushes away from right edge*/
+    color: white;
+    cursor: pointer;
+  }
+/* End of header CSS */
+
+
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f0eeea;
+  color: #333;
+}
+
+.app-container {
+  justify-content: center;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+
+
+/* Search Bar */
+.search-bar {
+  width: 100%;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #060000;
+  border-radius: 6px;
+  margin-bottom: 1.5rem;
+}
+
+/* Image Upload */
+.image-upload {
+  margin-bottom: 2rem;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+/* Bio Section */
+.bio-section {
+  padding: 2rem 0;
+  border-top: 1px solid #ddd;
+  margin-top: 2rem;
+}
+
+.bio-section h2 {
+  margin-bottom: 1rem;
+}
+
+.bio-section img {
+  max-width: 100%;
+  border-radius: 10px;
+  margin-top: 1rem;
+}
