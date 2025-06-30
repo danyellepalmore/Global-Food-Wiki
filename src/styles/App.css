@@ -2,7 +2,7 @@
   .app-header {
     position: relative; /* Positioning for feedback link */
     background-color: #283618;
-    padding: 40px; /*adds 20 px on all sides*/
+    padding: 20px; /*adds 20 px on all sides*/
     text-align: center; /*centers inline content in header*/
   }
 
