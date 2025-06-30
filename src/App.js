@@ -25,7 +25,7 @@ function App() {
       <header className="app-header">
         {/* not working */}
         <img 
-          src="GlobalFoodWikiLogo.png"
+          src="GlobalFoodWikilogo.png"
           alt="Global Food Wiki logo featuring a stylized globe with utensils, conveying a welcoming and informative atmosphere. No visible text in the logo. The logo is placed in the header of a food encyclopedia web application." 
           className="logo" 
         />
