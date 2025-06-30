@@ -1,6 +1,7 @@
 import ImageUpload from "./Image.Upload"; 
 import SearchBar from "./SearchableDish";
 import './App.css';
+import logo from './assets/GlobalFoodWikilogo.png'; // Importing the logo image
 
 const sampleData = [
   "Pizza",
@@ -23,9 +24,7 @@ function App() {
     <div className="app-container">
 
       <header className="app-header">
-        {/* not working */}
-        <img 
-          src="GlobalFoodWikilogo.png"
+        <img src={logo} /*image processed by webpack*/
           alt="Global Food Wiki logo featuring a stylized globe with utensils, conveying a welcoming and informative atmosphere. No visible text in the logo. The logo is placed in the header of a food encyclopedia web application." 
           className="logo" 
         />
