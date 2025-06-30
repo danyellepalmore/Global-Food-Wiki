@@ -28,19 +28,23 @@ export default function SearchBar({ data }) {
   };
 
   return (
-    <div style={{ position: 'relative' }}>
+    <div className="search-bar" style={{ position: 'relative', flex: 1 }}>
       <input
         type="text"
         value={query}
         onChange={handleChange}
-        placeholder="Search..."
+        placeholder="Search Dish Name"
+        className="search-input"
+        autoComplete="off"
       />
+
+      {/* drop down list of suggestions */}
       {suggestions.length > 0 && (
-        <ul style={{ position: 'absolute', backgroundColor: 'white', border: '1px solid gray', listStyle: 'none', padding: 0, margin: 0 }}>
+        <ul className="suggestions-dropdown">
           {suggestions.map((item, index) => (
-            <li key={index} onClick={() => handleSelect(item)} style={{ padding: '5px', cursor: 'pointer' }}>
-              {item}
-            </li>
+          <li key={index} onClick={() => handleSelect(item)}>
+          {item}
+         </li>
           ))}
         </ul>
       )}

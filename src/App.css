@@ -2,7 +2,7 @@
   .app-header {
     position: relative; /* Positioning for feedback link */
     background-color: #283618;
-    padding: 20px; /*adds 20 px on all sides*/
+    padding: 40px; /*adds 20 px on all sides*/
     text-align: center; /*centers inline content in header*/
   }
 
@@ -10,6 +10,7 @@
     height: 60px;
     max-width: 80%;
     object-fit: contain;
+    color: wheat;
   }
 
   .feedback-link{
@@ -23,29 +24,88 @@
 
 
 body {
-  margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f0eeea;
+  background-color: rgb(240, 238, 234);
   color: #333;
 }
 
 .app-container {
-  justify-content: center;
-  box-sizing: border-box;
-  align-items: center;
+  background-color: #f0eeea; /*light background for the app container*/
 }
 
+.centered-content {
+  display: flex;
+  flex-direction: column; /*stack elements vertically*/
+  align-items: center; /*center content horizontally*/
+}
 
-
-/* Search Bar */
-.search-bar {
+.container {
   width: 100%;
-  padding: 10px;
-  font-size: 1rem;
-  border: 1px solid #060000;
-  border-radius: 6px;
-  margin-bottom: 1.5rem;
+  font-family: sans-serif;
 }
+
+
+.search-bar {
+  width: 100vw; /* Full viewport width */
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 10px;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+
+.dropdown,
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.search-button {
+  padding: 12px;
+  font-size: 16px;
+  background-color: #283618;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 4%;
+}
+
+.search-button:hover {
+  background-color: #218838;
+}
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 4px;
+  list-style: none;
+  padding: 0%;
+  margin: 0;
+}
+
+.suggestions-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-dropdown li:hover {
+  background-color: #f0f0f0;
+}
+
+
 
 /* Image Upload */
 .image-upload {
@@ -58,16 +118,46 @@ body {
   border-radius: 8px;
 }
 
+.upload-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background-color: #040404;
+  color: white;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #444343;
+}
+
+.image-preview {
+  margin-top: 1rem;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+
 /* Bio Section */
 .bio-section {
-  padding: 2rem 0;
-  border-top: 1px solid #ddd;
-  margin-top: 2rem;
+text-align: right;
 }
 
 .bio-section h2 {
   margin-bottom: 1rem;
+  text-align: left;
 }
+
+.section-divider {
+  border: none;
+  height: 100px;
+  margin: 3rem 0;
+  background-color: #283618;
+}
+
 
 .bio-section img {
   max-width: 100%;

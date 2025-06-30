@@ -1,9 +1,15 @@
+import React, { useState } from 'react';
+import './App.css'; // assuming styles are here
+
 export default function ImageUpload() {
+  const [preview, setPreview] = useState(null);
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
+        setPreview(reader.result); // show preview
         console.log('Image uploaded:', reader.result);
       };
       reader.readAsDataURL(file);
@@ -11,9 +17,22 @@ export default function ImageUpload() {
   };
 
   return (
-    <div>
-      <h1>Image Upload</h1>
-      <input type="file" accept="image/*" onChange={handleFileChange} />
+    <div className="image-upload">
+      <h1>Upload Your Image</h1>
+      <p>Upload an image of the food item you want to know more about.</p>
+      <label className="upload-button">
+        Upload Image
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleFileChange}
+          style={{ display: 'none' }}
+        />
+      </label>
+
+      {preview && (
+        <img src={preview} alt="Preview" className="image-preview" />
+      )}
     </div>
   );
 }
