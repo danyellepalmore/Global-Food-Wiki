@@ -17,7 +17,7 @@ export default function ImageUpload() {
   };
 
   return (
-    <div className="image-upload">
+    <div className="image-upload, centered-content">
       <h1>Upload Your Image</h1>
       <p>Upload an image of the food item you want to know more about.</p>
       <label className="upload-button">

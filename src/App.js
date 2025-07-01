@@ -9,7 +9,9 @@ function App() {
     <div className="app-container">
       <Header />
       <Routes>
+        {/* Direct to home page on opening */}
         <Route path="/" element={<Home />} />
+        {/* Route to feedback page when "provide feedback" is clidked */}"
         <Route path="/feedback" element={<Feedback />} />
       </Routes>
     </div>

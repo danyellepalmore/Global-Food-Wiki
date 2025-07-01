@@ -4,6 +4,8 @@ import SearchBar from '../components/SearchBar';
 import ImageUpload from '../components/ImageUpload';
 import '../styles/App.css'; 
 import sampleData from '../data/sampleData';
+import logo from '../assets/GlobalFoodWikilogo.png';
+
 
 export default function Home() {
   return (
@@ -31,14 +33,29 @@ export default function Home() {
       <h1>OR</h1>
       <ImageUpload />
 
-      <hr className="section-divider" />
+      <div className="section-divider"></div>
 
       <section className="bio-section">
-        <h2>About This App</h2>
-        <p>
-          Global Food Wiki is an AI-powered digital food encyclopedia that uses computer vision and NLP
-          to identify food items, ingredients, origins, dietary needs, and cultural background.
-        </p>
+        <div className="bio-section-image">
+          <img src={logo} alt="Global Food Wiki Logo" />
+        </div>
+        <div className="bio-section-text">
+          <h2>About This App</h2>
+          <p>
+            Global Food Wiki, which is essentially an AI-powered digital food encyclopedia with special camera 
+            features that allow for image recognition and NLP to correctly identify food items, dishes. 
+            The product will provide the user with detailed lists of ingredients, origin information, dietary needs, and its 
+            cultural background. It combines natural language processing with computer vision, and incorporates cloud technologies 
+            all within the product making it user friendly.
+          </p>
+          <h2>Commitment to Cultural Equity</h2>
+          <p>
+            Global Food Wiki is intended for a diverse global audience, including everyday users, students, chefs, 
+            health-conscious individuals, and anyone with a curious mind about food. Designed for public use and daily 
+            interaction, the platform is built to be both educational and practical. With ongoing feedback and 
+            continuous internal enhancements, Global Food Wiki remains a constantly evolving resource for global food discovery.
+          </p>
+        </div>
       </section>
     </main>
   );

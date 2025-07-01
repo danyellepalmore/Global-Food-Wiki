@@ -152,8 +152,9 @@ text-align: right;
 }
 
 .section-divider {
-  border: none;
+  border: 1px solid #201f1f;
   height: 100px;
+  width: 100%;
   margin: 3rem 0;
   background-color: #283618;
 }
