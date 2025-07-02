@@ -5,9 +5,23 @@ import ImageUpload from '../components/ImageUpload';
 import '../styles/App.css'; 
 import sampleData from '../data/sampleData';
 import logo from '../assets/GlobalFoodWikilogo.png';
+import { useNavigate } from 'react-router-dom';
+
+
 
 
 export default function Home() {
+  const navigate = useNavigate();
+// Log activity and redirect to Results page
+  const handleSearch = () => {
+  console.log("Simulating search");
+  navigate('/results'); // Route to Results page
+};
+
+const handleUpload = () => {
+  console.log("Simulating image upload");
+  navigate('/results');
+};
   return (
     <main className="centered-content">
       <h1>Global Food Wikipedia</h1>
@@ -15,6 +29,7 @@ export default function Home() {
       <div className="search-bar">
         <SearchBar data={sampleData} />
 
+{/* No functionality yet */}
         <select className="dropdown">
           <option value="">Select Language or Region</option>
           <option value="english">English</option>
@@ -26,12 +41,17 @@ export default function Home() {
           <option value="latino">Latino</option>
           <option value="native_american">Native American</option>
         </select>
+    {/* Simulate functionality */}
+        <button className="search-button"
+          onClick={() => handleSearch()}>
+          Search
+        </button>
 
-        <button className="search-button">Search</button>
       </div>
 
       <h1>OR</h1>
-      <ImageUpload />
+      <ImageUpload onUploadComplete={handleUpload} />
+
 
       <div className="section-divider"></div>
 

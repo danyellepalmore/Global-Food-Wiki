@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../styles/App.css';
 
 export default function ImageUpload() {
+
   const [preview, setPreview] = useState(null);
 
   const handleFileChange = (event) => {
@@ -14,7 +15,15 @@ export default function ImageUpload() {
       };
       reader.readAsDataURL(file);
     }
-  };
+  }
+    const ImageUpload = ({ onUploadComplete }) => {
+    const handleFileChange = (e) => {
+      console.log("Image file selected: ", e.target.files[0]);
+      onUploadComplete(); // Simulate upload completion
+    };
+
+  return <input type="file" onChange={handleFileChange} />;
+};
 
   return (
     <div className="image-upload, centered-content">
