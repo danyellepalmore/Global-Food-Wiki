@@ -224,10 +224,11 @@ button[type="submit"]:hover {
 /* End of feedback page styling */
 
 /* Results page */
-.item-name{
-  color:coral
-}
 .item-description {
   color: #f0eeea;
+}
+.result-header, h3{
+  font-size: large;
+  font-weight: bold;
 }
 

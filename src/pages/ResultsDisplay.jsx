@@ -1,8 +1,12 @@
 import '../styles/App.css';
 import SearchBar from '../components/SearchBar';
 import sampleData from '../data/sampleData'; // Sample data for search bar
+import { useLocation } from 'react-router-dom';
 
 const DishResult = () => {
+  const location = useLocation();
+  const uploadedImage = location.state?.image; // Get uploaded image from state
+  
   // Simulated data
   const foodData = {
     name: "Apple Pie",
@@ -22,50 +26,44 @@ const DishResult = () => {
       </div>
       <div className="split-page">
         <div className="right-side">
-        <div className="item-name">
-          <h1>Dish Name: {foodData.name}</h1>
+          <div className="item-description">
+          <h1>{foodData.name}</h1>
+            <p>This dish information
+              is provided by an API or AI model
+              and is not guaranteed to be accurate.
+            </p>
+
+            <h3>Main Ingredients</h3>
+            <ul className="list-disc list-inside">
+              {foodData.ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
+
+            <h3>Origin</h3>
+            <p>{foodData.origin}</p>
+
+            <h3>Dietary Information</h3>
+            <p>{foodData.dietary}</p>
+
+            <h3 >Cultural Background</h3>
+            <p>{foodData.culture}</p>
           </div>
-        <div className="item-description">
-          <p>This dish is from this land and from here... this information 
-            is provided by an API or AI model
-            and is not guaranteed to be accurate.
-          </p>
-
-
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Main Ingredients</h3>
-          <ul className="list-disc list-inside">
-            {foodData.ingredients.map((ingredient, index) => (
-              <li key={index}>{ingredient}</li>
-            ))}
-          </ul>
         </div>
 
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Origin</h3>
-          <p>{foodData.origin}</p>
-        </div>
-
-        <div className="mb-4">
-          <h3 className="text-lg font-semibold">Dietary Information</h3>
-          <p>{foodData.dietary}</p>
-        </div>
-
-        <div>
-          <h3 className="text-lg font-semibold">Cultural Background</h3>
-          <p>{foodData.culture}</p>
-        </div>
-        </div>
-        </div>
         <div className='left-side'>
-          <h1>Image Placeholder from homepage image upload</h1>
+          {uploadedImage ? (
+            <img src={uploadedImage} alt="Uploaded Food" className="image-preview" />
+          ) : (
+            <h1>No image uploaded</h1>
+          )}
         </div>
-        </div>
-
-        <div className="centered-content" style={{ backgroundColor: "#f0eee0" }}>
-          <h1>Dish Contents Placeholder</h1>
       </div>
+      
+      <div className="centered-content" style={{ backgroundColor: "#f0eee0" }}>
+        <h1>Dish Contents Placeholder</h1>
       </div>
+    </div>
       
   );
 };

@@ -7,18 +7,17 @@ import sampleData from '../data/sampleData';
 import logo from '../assets/GlobalFoodWikilogo.png';
 import { useNavigate } from 'react-router-dom';
 
-
 export default function Home() {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook to navigate to results page
 // Log activity and redirect to Results page
   const handleSearch = () => {
   console.log("Simulating search");
-  navigate('/results'); // Route to Results page
+  navigate('/results');
 };
 
 const handleUpload = () => {
   console.log("Simulating image upload");
-  // navigate('/results');
+  navigate('/results');
 };
 
   return (
