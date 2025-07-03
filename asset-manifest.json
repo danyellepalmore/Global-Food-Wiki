@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/Global-Food-Wiki/static/css/main.cfde1e3b.css",
-    "main.js": "/Global-Food-Wiki/static/js/main.8d2c85be.js",
+    "main.css": "/Global-Food-Wiki/static/css/main.eb3b764c.css",
+    "main.js": "/Global-Food-Wiki/static/js/main.6a3cfab3.js",
     "static/js/453.96453769.chunk.js": "/Global-Food-Wiki/static/js/453.96453769.chunk.js",
     "static/media/GlobalFoodWikilogo.png": "/Global-Food-Wiki/static/media/GlobalFoodWikilogo.4fc305ffe6ee9d6bf27c.png",
     "index.html": "/Global-Food-Wiki/index.html",
-    "main.cfde1e3b.css.map": "/Global-Food-Wiki/static/css/main.cfde1e3b.css.map",
-    "main.8d2c85be.js.map": "/Global-Food-Wiki/static/js/main.8d2c85be.js.map",
+    "main.eb3b764c.css.map": "/Global-Food-Wiki/static/css/main.eb3b764c.css.map",
+    "main.6a3cfab3.js.map": "/Global-Food-Wiki/static/js/main.6a3cfab3.js.map",
     "453.96453769.chunk.js.map": "/Global-Food-Wiki/static/js/453.96453769.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.cfde1e3b.css",
-    "static/js/main.8d2c85be.js"
+    "static/css/main.eb3b764c.css",
+    "static/js/main.6a3cfab3.js"
   ]
 }
