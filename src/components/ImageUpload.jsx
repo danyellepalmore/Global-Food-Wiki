@@ -1,29 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import '../styles/App.css';
 
-export default function ImageUpload() {
-
-  const [preview, setPreview] = useState(null);
+export default function ImageUpload({ onUploadComplete }) {
+  const [preview, setPreview] = useState(null); //preview states
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setPreview(reader.result); // show preview
+        setPreview(reader.result);
         console.log('Image uploaded:', reader.result);
+        if (onUploadComplete) onUploadComplete(reader.result);
       };
       reader.readAsDataURL(file);
     }
-  }
-    const ImageUpload = ({ onUploadComplete }) => {
-    const handleFileChange = (e) => {
-      console.log("Image file selected: ", e.target.files[0]);
-      onUploadComplete(); // Simulate upload completion
-    };
-
-  return <input type="file" onChange={handleFileChange} />;
-};
+  };
 
   return (
     <div className="image-upload, centered-content">
@@ -38,7 +30,6 @@ export default function ImageUpload() {
           style={{ display: 'none' }}
         />
       </label>
-
       {preview && (
         <img src={preview} alt="Preview" className="image-preview" />
       )}

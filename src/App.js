@@ -13,7 +13,7 @@ function App() {
         {/* Direct to home page on opening */}
         <Route path="/" element={<Home />} />
         {/* Route to results page when search or image upload */}
-        <Route path="/resultsdisplay" element={<Results />} />
+        <Route path="/results" element={<Results />} />
         {/* Route to feedback page when "provide feedback" is clidked */}"
         <Route path="/feedback" element={<Feedback />} />
       </Routes>

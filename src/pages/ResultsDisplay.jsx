@@ -1,11 +1,10 @@
 import React from 'react';
-import Carousel from 'react-bootstrap/Carousel';
 import '../styles/App.css';
 import SearchBar from '../components/SearchBar';
 import sampleData from '../data/sampleData'; // Sample data for search bar
 
 const DishResult = () => {
-  // Simulated data — in a real app, this would come from props or an API call
+  // Simulated data
   const foodData = {
     name: "Apple Pie",
     ingredients: [
@@ -18,6 +17,8 @@ const DishResult = () => {
   };
 
   return (
+    <div className="search-bar">
+        <SearchBar data={sampleData} />
     <div className="bg-white text-gray-800 font-sans p-6">
       <div className="max-w-3xl mx-auto shadow-lg rounded-lg border p-6 bg-gray-50">
         <h1 className="text-3xl font-bold mb-4">Dish Result</h1>
@@ -52,6 +53,7 @@ const DishResult = () => {
           <p>{foodData.culture}</p>
         </div>
       </div>
+    </div>
     </div>
   );
 };

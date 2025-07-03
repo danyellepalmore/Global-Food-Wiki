@@ -70,13 +70,13 @@ body {
 }
 
 .search-button {
-  padding: 12px;
-  font-size: 16px;
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
   background-color: #283618;
   color: white;
-  border: none;
+  font-weight: bold;
   cursor: pointer;
-  border-radius: 4%;
+  transition: background-color 0.3s ease;
 }
 .search-button:hover {
   background-color: #218838;
@@ -114,35 +114,36 @@ body {
 .image-upload {
   margin-bottom: 2rem;
 }
-
 .image-preview {
-  margin-top: 1rem;
+  margin-top: 2rem;
+  margin-bottom: 20px;
   max-width: 100%;
-  border-radius: 8px;
+  border-radius: 10px;
+  box-shadow: 0 8px 8px rgba(0, 0, 0, 0.752);
 }
-
 .upload-button {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background-color: #040404;
+  margin-bottom: 10px;
+  background-color: #283618;
   color: white;
   font-weight: bold;
   border-radius: 12px;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-
 .upload-button:hover {
-  background-color: #444343;
+  background-color: #218838;
 }
+/* End of image upload */
 
-.image-preview {
-  margin-top: 1rem;
-  max-width: 100%;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+.section-divider {
+  border: 1px solid #f0eeea;
+  height: 200px;
+  width: 100%;
+  background-color: #283618;
+  /* padding: 20px; */
 }
-
 
 /* Bio Section */
 .bio-section {
@@ -161,54 +162,63 @@ text-align: right;
   margin-top: 1rem;
 }
 
-.section-divider {
-  border: 1px solid #201f1f;
-  height: 100px;
-  width: 100%;
-  margin: 3rem 0;
-  background-color: #283618;
-}
+
 
 /* Feedback Page */
 .feedback-page {
   font-family: Arial, sans-serif;
-  padding: 20px;
+  /* padding: 20px; */
 }
-
 .feedback-form-container {
-  background-color: #f4f2ec;
-  padding: 20px;
-  border-radius: 6px;
+  background-color: #f0eeea;
+  /* padding: 20px; */
 }
-
 input[type="text"],
 input[type="email"],
 select,
 textarea {
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   margin-top: 8px;
   margin-bottom: 20px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  resize: vertical;
+  /* resize: vertical; */
 }
-
 button[type="submit"] {
-  background-color: #000;
+  background-color: #283618;
   color: white;
   padding: 12px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
 }
-
 button[type="submit"]:hover {
-  background-color: #333;
+  background-color: #218838;
 }
-
 .thank-you-message {
   text-align: center;
   padding: 30px;
 }
+.split-page {
+  display: flex;
+  height: 100vh;
+}
+.left-side,
+.right-side {
+  flex: 2; 
+  padding: 1rem;
+  box-sizing: border-box;
+}
+.left-side {
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+.right-side {
+  flex: 2;
+  align-items: center;
+  justify-content: center;
+}
+/* End of feedback page styling */
 

@@ -8,8 +8,6 @@ import logo from '../assets/GlobalFoodWikilogo.png';
 import { useNavigate } from 'react-router-dom';
 
 
-
-
 export default function Home() {
   const navigate = useNavigate();
 // Log activity and redirect to Results page
@@ -20,8 +18,9 @@ export default function Home() {
 
 const handleUpload = () => {
   console.log("Simulating image upload");
-  navigate('/results');
+  // navigate('/results');
 };
+
   return (
     <main className="centered-content">
       <h1>Global Food Wikipedia</h1>
