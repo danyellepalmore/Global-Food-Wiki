@@ -44,6 +44,7 @@ body {
 
 .results{
   background-color: #283618;
+  border: #f0eeea solid 1px;
 }
 
 
@@ -221,4 +222,12 @@ button[type="submit"]:hover {
   justify-content: center;
 }
 /* End of feedback page styling */
+
+/* Results page */
+.item-name{
+  color:coral
+}
+.item-description {
+  color: #f0eeea;
+}
 

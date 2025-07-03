@@ -1,4 +1,3 @@
-import React from 'react';
 import '../styles/App.css';
 import SearchBar from '../components/SearchBar';
 import sampleData from '../data/sampleData'; // Sample data for search bar
@@ -17,17 +16,21 @@ const DishResult = () => {
   };
 
   return (
-    <div className="search-bar">
+    <div className='results'>
+      <div className="search-bar">
         <SearchBar data={sampleData} />
-    <div className="bg-white text-gray-800 font-sans p-6">
-      <div className="max-w-3xl mx-auto shadow-lg rounded-lg border p-6 bg-gray-50">
-        <h1 className="text-3xl font-bold mb-4">Dish Result</h1>
+      </div>
+      <div className="split-page">
+        <div className="right-side">
+        <div className="item-name">
+          <h1>Dish Name: {foodData.name}</h1>
+          </div>
+        <div className="item-description">
+          <p>This dish is from this land and from here... this information 
+            is provided by an API or AI model
+            and is not guaranteed to be accurate.
+          </p>
 
-        <div className="mb-4">
-          <h2 className="text-xl font-semibold text-indigo-600">
-            {foodData.name}
-          </h2>
-        </div>
 
         <div className="mb-4">
           <h3 className="text-lg font-semibold">Main Ingredients</h3>
@@ -52,9 +55,18 @@ const DishResult = () => {
           <h3 className="text-lg font-semibold">Cultural Background</h3>
           <p>{foodData.culture}</p>
         </div>
+        </div>
+        </div>
+        <div className='left-side'>
+          <h1>Image Placeholder from homepage image upload</h1>
+        </div>
+        </div>
+
+        <div className="centered-content" style={{ backgroundColor: "#f0eee0" }}>
+          <h1>Dish Contents Placeholder</h1>
       </div>
-    </div>
-    </div>
+      </div>
+      
   );
 };
 
