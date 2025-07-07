@@ -53,7 +53,7 @@ const DishResult = () => {
 
         <div className='left-side'>
           {uploadedImage ? (
-            <img src={uploadedImage} alt="Uploaded Food" className="image-preview" />
+            <img src={uploadedImage} alt="Uploaded Food" className="image-preview" style={{objectFit: "cover"}} />
           ) : (
             <h1>No image uploaded</h1>
           )}
