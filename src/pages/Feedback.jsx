@@ -3,7 +3,7 @@ import { useState } from "react";
 import "../styles/App.css";
 
 const countries = [
-  "Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
+  "Country","Afghanistan", "Albania", "Algeria", "Andorra", "Angola",
   "Argentina", "Australia", "Austria", "Bangladesh", "Belgium",
   "Brazil", "Canada", "China", "France", "Germany",
   "India", "Italy", "Japan", "Mexico", "Netherlands",

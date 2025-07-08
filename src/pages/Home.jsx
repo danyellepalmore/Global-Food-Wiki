@@ -52,20 +52,20 @@ const handleUpload = () => {
 
 
       <div className="section-divider"></div>
-
-      <section className="bio-section">
-        <div className="bio-section-image">
+      <section className="split-page">
+        <div className="bio-section-image, left-side">
           <img src={logo} alt="Global Food Wiki Logo" />
         </div>
-        <div className="bio-section-text">
+        <div className="right-side">
           <h2>About This App</h2>
           <p>
-            Global Food Wiki, which is essentially an AI-powered digital food encyclopedia with special camera 
+            Global Food Wiki, is essentially an AI-powered digital food encyclopedia with special camera 
             features that allow for image recognition and NLP to correctly identify food items, dishes. 
-            The product will provide the user with detailed lists of ingredients, origin information, dietary needs, and its 
+            This product provides users with detailed lists of ingredients, origin information, dietary needs, and its 
             cultural background. It combines natural language processing with computer vision, and incorporates cloud technologies 
             all within the product making it user friendly.
           </p>
+          <br></br>
           <h2>Commitment to Cultural Equity</h2>
           <p>
             Global Food Wiki is intended for a diverse global audience, including everyday users, students, chefs, 
