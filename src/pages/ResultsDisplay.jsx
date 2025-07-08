@@ -2,11 +2,20 @@ import '../styles/App.css';
 import SearchBar from '../components/SearchBar';
 import sampleData from '../data/sampleData'; // Sample data for search bar
 import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Hook to navigate to results page
 
 const DishResult = () => {
   const location = useLocation();
   const uploadedImage = location.state?.image; // Get uploaded image from state
   
+  // Function to handle search button click
+   const navigate = useNavigate(); // Hook to navigate to results page
+  // Log activity and redirect to Results page
+  const handleSearch = () => {
+  console.log("Simulating search");
+  navigate('/results');
+  };
+
   // Simulated data
   const foodData = {
     name: "Apple Pie",
@@ -23,6 +32,23 @@ const DishResult = () => {
     <div className='results'>
       <div className="search-bar">
         <SearchBar data={sampleData} />
+        {/* No functionality yet */}
+        <select className="dropdown">
+          <option value="">Select Language or Region</option>
+          <option value="english">English</option>
+          <option value="spanish">Spanish</option>
+          <option value="hindi">Hindi</option>
+          <option value="chinese">Chinese</option>
+          <option value="arabic">Arabic</option>
+          <option value="african_american">African American</option>
+          <option value="latino">Latino</option>
+          <option value="native_american">Native American</option>
+        </select>
+        {/* Simulate functionality */}
+        <button className="search-button"
+          onClick={() => handleSearch()}>
+          Search
+        </button>
       </div>
       <div className="split-page">
         <div className="right-side">
