@@ -22,13 +22,9 @@ export default function Home() {
       </header>
 
       <section className="py-8 w-full px-4 max-w-4xl mx-auto text-center">
-
-        {/* Wrapped SearchBar in relative container */}
-        <div className="search-bar flex flex-col md:flex-row items-center gap-4 justify-center relative">
-          <div className="relative w-full max-w-md">
-            <SearchBar data={sampleData} ref={searchRef} />
-          </div>
-
+        <div className="search-bar flex flex-col md:flex-row items-center gap-4 justify-center">
+          <SearchBar data={sampleData} ref={searchRef} />
+          
           <select className="dropdown border px-3 py-2 rounded-md shadow-md">
             <option value="">Select Language or Region</option>
             <option value="english">English</option>
