@@ -1,97 +1,74 @@
-import '../styles/App.css';
-import SearchBar from '../components/SearchBar';
-import sampleData from '../data/sampleData'; // Sample data for search bar
-import { useLocation } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom'; // Hook to navigate to results page
+import React, { useEffect, useState } from 'react';
+import { useLocation, useSearchParams } from 'react-router-dom';
 
-const DishResult = () => {
+const ResultsDisplay = () => {
   const location = useLocation();
-  const uploadedImage = location.state?.image; // Get uploaded image from state
-  
-  // Function to handle search button click
-   const navigate = useNavigate(); // Hook to navigate to results page
-  // Log activity and redirect to Results page
-  const handleSearch = () => {
-  console.log("Simulating search");
-  navigate('/results');
-  };
+  const [searchParams] = useSearchParams();
 
-  // Simulated data
-  const foodData = {
-    name: "Apple Pie",
-    ingredients: [
-      "Pie Crust", "Apples", "Granulated Sugar", "Brown Sugar",
-      "Nutmeg", "Lemon", "Egg", "Flour", "Cinnamon"
-    ],
-    origin: "England",
-    dietary: "Contains eggs, gluten, soy, and sulphites.",
-    culture: "Apple Pie is a classic English dessert that represents a blend of traditional and modern English cuisine."
-  };
+  // Support dish name from router state or fallback to URL param
+  const dishName = location.state?.dish || searchParams.get("name") || '';
+
+  const [dish, setDish] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!dishName) return;
+
+    const fetchDishData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}`);
+        if (!response.ok) throw new Error('Dish not found.');
+        const data = await response.json();
+        setDish(data);
+      } catch (err) {
+        setError(err.message || 'Something went wrong.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDishData();
+  }, [dishName]);
+
+  if (!dishName) return <p className="text-red-500">No dish name provided.</p>;
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p className="text-red-500">Error: {error}</p>;
+  if (!dish) return <p>No data available for "{dishName}".</p>;
 
   return (
-    <div className='results'>
-      <div className="search-bar">
-        <SearchBar data={sampleData} />
-        {/* No functionality yet */}
-        <select className="dropdown">
-          <option value="">Select Language or Region</option>
-          <option value="english">English</option>
-          <option value="spanish">Spanish</option>
-          <option value="hindi">Hindi</option>
-          <option value="chinese">Chinese</option>
-          <option value="arabic">Arabic</option>
-          <option value="african_american">African American</option>
-          <option value="latino">Latino</option>
-          <option value="native_american">Native American</option>
-        </select>
-        {/* Simulate functionality */}
-        <button className="search-button"
-          onClick={() => handleSearch()}>
-          Search
-        </button>
-      </div>
-      <div className="split-page">
-        <div className="right-side">
-          <div className="item-description">
-          <h1>{foodData.name}</h1>
-            <p>This dish information
-              is provided by an API or AI model
-              and is not guaranteed to be accurate.
-            </p>
+    <div className="bg-white p-6 rounded shadow-md">
+      <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
 
-            <h3>Main Ingredients</h3>
-            <ul className="list-disc list-inside">
-              {foodData.ingredients.map((ingredient, index) => (
-                <li key={index}>{ingredient}</li>
-              ))}
-            </ul>
+      {dish.image && (
+        <img src={dish.image} alt={dish.name} className="mt-4 w-full max-w-md rounded" />
+      )}
 
-            <h3>Origin</h3>
-            <p>{foodData.origin}</p>
+      {dish.origin && (
+        <p className="text-gray-700 mt-2"><strong>Origin:</strong> {dish.origin}</p>
+      )}
 
-            <h3>Dietary Information</h3>
-            <p>{foodData.dietary}</p>
+      {dish.description && (
+        <p className="mt-2 text-gray-800">{dish.description}</p>
+      )}
 
-            <h3 >Cultural Background</h3>
-            <p>{foodData.culture}</p>
-          </div>
+      {dish.ingredients?.length > 0 && (
+        <div className="mt-4">
+          <h3 className="font-semibold">Ingredients:</h3>
+          <ul className="list-disc ml-6">
+            {dish.ingredients.map((item, idx) => (
+              <li key={idx}>{item}</li>
+            ))}
+          </ul>
         </div>
+      )}
 
-        <div className='left-side'>
-          {uploadedImage ? (
-            <img src={uploadedImage} alt="Uploaded Food" className="image-preview" style={{objectFit: "cover"}} />
-          ) : (
-            <h1>No image uploaded</h1>
-          )}
-        </div>
-      </div>
-      
-      <div className="centered-content" style={{ backgroundColor: "#f0eee0" }}>
-        <h1>Dish Contents Placeholder</h1>
-      </div>
+      {dish.culture && (
+        <p className="mt-2 text-sm text-gray-600"><strong>Cultural Context:</strong> {dish.culture}</p>
+      )}
     </div>
-      
   );
 };
 
-export default DishResult;
+export default ResultsDisplay;

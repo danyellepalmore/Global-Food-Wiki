@@ -1,53 +1,69 @@
-import React, { useState } from 'react';
+import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-export default function SearchBar({ data }) {
-  //Holds user text input and values matching query
-    const [query, setQuery] = useState('');
-    const [suggestions, setSuggestions] = useState([]);
+const SearchBar = forwardRef(({ data }, ref) => {
+  const [query, setQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]);
+  const navigate = useNavigate();
 
-//Updates query state with current text
+  const triggerSearch = () => {
+    if (!query.trim()) return;
+    navigate(`/results?name=${encodeURIComponent(query)}`);
+  };
+
+  useImperativeHandle(ref, () => ({
+    triggerSearch,
+  }));
+
   const handleChange = (e) => {
     const input = e.target.value;
     setQuery(input);
 
-    // Filter 5 suggestions based on input & resets to empty array when cleared
     if (input.length > 0) {
       const filtered = data.filter((item) =>
         item.toLowerCase().includes(input.toLowerCase())
       );
-      setSuggestions(filtered.slice(0, 5)); // Limit to 5 suggestions
+      setSuggestions(filtered.slice(0, 5));
     } else {
       setSuggestions([]);
     }
   };
 
-  //Reset &clear suggestion list
   const handleSelect = (value) => {
     setQuery(value);
     setSuggestions([]);
+    navigate(`/results?name=${encodeURIComponent(value)}`);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    triggerSearch();
   };
 
   return (
-    <div className="search-bar" style={{ position: 'relative', flex: 1 }}>
+    <form onSubmit={handleSubmit} className="relative w-full">
       <input
         type="text"
         value={query}
         onChange={handleChange}
-        placeholder="Search Dish Name"
-        className="search-input"
-        autoComplete="off"
+        placeholder="Search for a dish"
+        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
       />
-
-      {/* drop down list of suggestions */}
       {suggestions.length > 0 && (
-        <ul className="suggestions-dropdown">
+        <ul className="absolute z-10 w-full bg-white border border-gray-300 rounded-md mt-1 max-h-40 overflow-y-auto">
           {suggestions.map((item, index) => (
-          <li key={index} onClick={() => handleSelect(item)}>
-          {item}
-         </li>
+            <li
+              key={index}
+              onClick={() => handleSelect(item)}
+              className="px-4 py-2 hover:bg-green-100 cursor-pointer"
+            >
+              {item}
+            </li>
           ))}
         </ul>
       )}
-    </div>
+    </form>
   );
-}
+});
+
+export default SearchBar;
