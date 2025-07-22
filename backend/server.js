@@ -1,65 +1,83 @@
+require('dotenv').config(); // Load .env variables
 const express = require('express');
 const cors = require('cors');
-const app = express();
-const port = 5000;
+const mongoose = require('mongoose');
 
+const app = express();
+const port = process.env.PORT || 5000;
+
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Mock food dataset — can be replaced with real DB/API later
-const mockFoods = [
-  {
-    name: "Pad Thai",
-    origin: "Thailand",
-    description: "A stir-fried rice noodle dish commonly served as street food.",
-    ingredients: ["Rice noodles", "Shrimp", "Peanuts", "Eggs", "Bean sprouts"],
-    culture: "Very popular in Thai cuisine, often eaten with lime and chili flakes.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/3/32/Pad_Thai_kung_Chang_Khong.jpg"
-  },
-  {
-    name: "Biryani",
-    origin: "India",
-    description: "A mixed rice dish made with spices, rice, and meat or vegetables.",
-    ingredients: ["Rice", "Spices", "Chicken", "Yogurt", "Onions"],
-    culture: "Served during festivals and celebrations in South Asia.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/f/fc/Hyderabadi_Chicken_Biryani.jpg"
-  },
-  {
-    name: "Tacos",
-    origin: "Mexico",
-    description: "A traditional Mexican dish consisting of a small hand-sized corn or wheat tortilla topped with a filling.",
-    ingredients: ["Tortilla", "Beef", "Lettuce", "Cheese", "Salsa"],
-    culture: "Common street food and a staple of Mexican cuisine.",
-    image: "https://upload.wikimedia.org/wikipedia/commons/5/57/Tacos_de_Carnitas.jpg"
+// ✅ MongoDB connection using .env
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('✅ Connected to MongoDB Atlas'))
+.catch(err => console.error('❌ MongoDB connection error:', err));
+
+// ✅ Food Schema
+const foodSchema = new mongoose.Schema({
+  name: String,
+  origin: String,
+  description: String,
+  ingredients: [String],
+  culture: String,
+  image: String
+});
+
+const Food = mongoose.model('Food', foodSchema);
+
+// ✅ API: Partial search + Pagination + Sorting
+app.get('/api/foods', async (req, res) => {
+  const query = req.query.name || '';
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
+  const sortField = req.query.sort || 'name';
+
+  try {
+    const filter = query ? { name: { $regex: query, $options: 'i' } } : {};
+    const foods = await Food.find(filter)
+      .sort({ [sortField]: 1 })
+      .skip((page - 1) * limit)
+      .limit(limit);
+
+    const total = await Food.countDocuments(filter);
+
+    res.json({
+      results: foods,
+      pagination: {
+        total,
+        page,
+        pages: Math.ceil(total / limit)
+      }
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error.' });
   }
-];
-
-// API endpoint to search for a dish by name
-app.get('/api/foods', (req, res) => {
-  const query = req.query.name;
-  if (!query) return res.status(400).json({ error: 'No dish name provided.' });
-
-  const found = mockFoods.find(food =>
-    food.name.toLowerCase().trim() === query.trim().toLowerCase()
-  );
-
-  if (!found) return res.status(404).json({ error: 'Dish not found.' });
-
-  res.json(found);
 });
 
-// img stuff
-const multer = require('multer');
-const upload = multer({ storage: multer.memoryStorage() });
+// ✅ API for suggestions
+app.get('/api/suggestions', async (req, res) => {
+  const query = req.query.q || '';
+  if (!query) return res.json([]);
 
-app.post('/api/recognize', upload.single('image'), (req, res) => {
-  console.log('Image received:', req.file.originalname);
-  // Replace this dummy logic with actual model or API call
-  res.json({ name: 'Biryani' });
+  try {
+    const suggestions = await Food.find({
+      name: { $regex: query, $options: 'i' }
+    })
+      .limit(5)
+      .select('name');
+
+    res.json(suggestions.map(item => item.name));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error.' });
+  }
 });
 
-
-// Start server
-app.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
-});
+// ✅ Start server
+app.listen(port, () => console.log(`✅ Server running on http://localhost:${port}`));
