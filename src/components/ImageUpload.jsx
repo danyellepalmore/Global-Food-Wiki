@@ -2,35 +2,56 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/App.css';
 
-//previously rane onimageupload
 export default function ImageUpload() {
-  const [preview, setPreview] = useState(null); //preview photo state
-  const [image, setconfirmedImage] = useState(false); //cstate to confirm image upload
-  const navigate = useNavigate(); // Hook to navigate to results page
+  const [preview, setPreview] = useState(null);
+  const [imageFile, setImageFile] = useState(null);
+  const [confirmed, setConfirmed] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setImageFile(file); // Save the file for uploading
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreview(reader.result);
-        setconfirmedImage(false);
+        setConfirmed(false);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleConfirmImage = () => {
-    setconfirmedImage(true);
+    setConfirmed(true);
   };
 
-  const handleSearch = () => {
-      navigate('/results', { state: { image: preview } });
-  };
+  const handleSearch = async () => {
+    if (!imageFile) return;
 
+    setLoading(true);
+    const formData = new FormData();
+    formData.append('image', imageFile);
+
+    try {
+      const res = await fetch('http://localhost:5000/api/recognize', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!res.ok) throw new Error('Image recognition failed.');
+      const data = await res.json();
+      const recognizedDish = data.name;
+      navigate(`/results?name=${encodeURIComponent(recognizedDish)}`);
+    } catch (err) {
+      alert('Recognition failed: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="image-upload, centered-content">
+    <div className="image-upload centered-content">
       <h1>Upload Your Image</h1>
       <p>Upload an image of the food item you want to know more about.</p>
       <label className="upload-button">
@@ -43,18 +64,21 @@ export default function ImageUpload() {
         />
       </label>
 
-    {preview && !image && (<>
-    <img src={preview} alt="Preview" className="image-preview" />
-    <button onClick={handleConfirmImage} className="upload-button">Confirm Image</button>
-    </>
-    )}
-    {image && (
-      <>
-        <img src={preview} alt="Confirmed" className="image-preview" />
-        <button className="search-button" onClick={handleSearch}>
-        Search </button>
-      </>
-    )}
+      {preview && !confirmed && (
+        <>
+          <img src={preview} alt="Preview" className="image-preview" />
+          <button onClick={handleConfirmImage} className="upload-button">Confirm Image</button>
+        </>
+      )}
+
+      {confirmed && (
+        <>
+          <img src={preview} alt="Confirmed" className="image-preview" />
+          <button onClick={handleSearch} className="search-button" disabled={loading}>
+            {loading ? 'Identifying...' : 'Search'}
+          </button>
+        </>
+      )}
     </div>
   );
 }
