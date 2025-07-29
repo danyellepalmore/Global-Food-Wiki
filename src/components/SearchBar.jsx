@@ -53,7 +53,8 @@ const SearchBar = forwardRef((props, ref) => {
         className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-400"
       />
       {suggestions.length > 0 && (
-        <ul className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 shadow-lg z-50 max-h-40 overflow-y-auto">
+        // included CSS for dropdown when viewing suggestions
+        <ul className="suggestions-dropdown absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md mt-1 shadow-lg z-50 max-h-40 overflow-y-auto">
           {suggestions.map((item, index) => (
             <li
               key={index}
