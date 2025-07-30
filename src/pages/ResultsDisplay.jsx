@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const ResultsDisplay = () => {
@@ -9,24 +9,33 @@ const ResultsDisplay = () => {
   const [error, setError] = useState('');
   const [pagination, setPagination] = useState({ page: 1, pages: 1 });
 
-  const fetchData = async (page = 1) => {
+  // Wrap fetchData in useCallback so it can be safely used in useEffect deps
+  const fetchData = useCallback(async (page = 1) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}&page=${page}&limit=5`);
+      setError('');
+      const response = await fetch(
+        `http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}&page=${page}&limit=5`
+      );
       if (!response.ok) throw new Error('No results found.');
       const data = await response.json();
       setDishes(data.results);
       setPagination(data.pagination);
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'Failed to load results.');
+      setDishes([]);
+      setPagination({ page: 1, pages: 1 });
     } finally {
       setLoading(false);
     }
-  };
+  }, [dishName]);
 
   useEffect(() => {
-    if (dishName) fetchData();
-  }, [dishName]);
+    if (dishName) {
+      // Reset to page 1 when dishName changes
+      fetchData(1);
+    }
+  }, [dishName, fetchData]);
 
   if (!dishName) return <p className="text-red-500">No dish name provided.</p>;
   if (loading) return <p>Loading...</p>;
@@ -40,7 +49,13 @@ const ResultsDisplay = () => {
         dishes.map((dish, index) => (
           <div key={index} className="mb-6">
             <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
-            {dish.image && <img src={dish.image} alt={dish.name} className="mt-4 w-full max-w-md rounded" />}
+            {dish.image && (
+              <img
+                src={dish.image}
+                alt={dish.name}
+                className="mt-4 w-full max-w-md rounded"
+              />
+            )}
             {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
             {dish.description && <p>{dish.description}</p>}
             {dish.ingredients?.length > 0 && (

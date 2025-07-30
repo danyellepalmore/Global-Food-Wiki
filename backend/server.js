@@ -1,24 +1,26 @@
-require('dotenv').config(); // Load .env variables
+// server.js
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const multer = require('multer'); // for image uploads
 
 const app = express();
 const port = process.env.PORT || 5000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// ✅ MongoDB connection using .env
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log('✅ Connected to MongoDB Atlas'))
-.catch(err => console.error('❌ MongoDB connection error:', err));
+// Multer in-memory storage
+const upload = multer({ storage: multer.memoryStorage() });
 
-// ✅ Food Schema
+// ----- MongoDB -----
+mongoose
+  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('✅ Connected to MongoDB'))
+  .catch(err => console.error('❌ MongoDB connection error:', err));
+
 const foodSchema = new mongoose.Schema({
   name: String,
   origin: String,
@@ -27,10 +29,9 @@ const foodSchema = new mongoose.Schema({
   culture: String,
   image: String
 });
-
 const Food = mongoose.model('Food', foodSchema);
 
-// ✅ API: Partial search + Pagination + Sorting
+// ----- Search w/ pagination + sort -----
 app.get('/api/foods', async (req, res) => {
   const query = req.query.name || '';
   const page = parseInt(req.query.page) || 1;
@@ -51,33 +52,94 @@ app.get('/api/foods', async (req, res) => {
       pagination: {
         total,
         page,
-        pages: Math.ceil(total / limit)
-      }
+        pages: Math.ceil(total / limit),
+      },
     });
   } catch (err) {
-    console.error(err);
+    console.error('GET /api/foods error:', err);
     res.status(500).json({ error: 'Server error.' });
   }
 });
 
-// ✅ API for suggestions
+// ----- Typeahead suggestions -----
 app.get('/api/suggestions', async (req, res) => {
-  const query = req.query.q || '';
-  if (!query) return res.json([]);
+  const q = req.query.q || '';
+  if (!q) return res.json([]);
 
   try {
-    const suggestions = await Food.find({
-      name: { $regex: query, $options: 'i' }
-    })
+    const suggestions = await Food.find({ name: { $regex: q, $options: 'i' } })
       .limit(5)
       .select('name');
-
-    res.json(suggestions.map(item => item.name));
+    res.json(suggestions.map(s => s.name));
   } catch (err) {
-    console.error(err);
+    console.error('GET /api/suggestions error:', err);
     res.status(500).json({ error: 'Server error.' });
   }
 });
 
-// ✅ Start server
-app.listen(port, () => console.log(`✅ Server running on http://localhost:${port}`));
+// ----- Image recognition (Clarifai REST) -----
+app.post('/api/recognize', upload.single('image'), async (req, res) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No image provided.' });
+
+    const {
+      CLARIFAI_PAT,
+      CLARIFAI_USER_ID = 'clarifai',
+      CLARIFAI_APP_ID = 'main',
+      CLARIFAI_MODEL_ID = 'food-item-recognition',
+      CLARIFAI_MODEL_VERSION_ID = '1d5fd481e0cf4826aa72ec3ff049e044',
+    } = process.env;
+
+    if (!CLARIFAI_PAT) {
+      return res.status(500).json({ error: 'Clarifai PAT missing in .env' });
+    }
+
+    const base64 = req.file.buffer.toString('base64');
+    const predictUrl = `https://api.clarifai.com/v2/users/${CLARIFAI_USER_ID}/apps/${CLARIFAI_APP_ID}/models/${CLARIFAI_MODEL_ID}/versions/${CLARIFAI_MODEL_VERSION_ID}/outputs`;
+
+    const body = {
+      inputs: [
+        {
+          data: {
+            image: { base64 }
+          }
+        }
+      ]
+    };
+
+    const cfRes = await fetch(predictUrl, {
+      method: 'POST',
+      headers: {
+        'Authorization': `Key ${CLARIFAI_PAT}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(body),
+    });
+
+    const cfJson = await cfRes.json();
+
+    if (!cfRes.ok || !cfJson.outputs || !cfJson.outputs[0]) {
+      console.error('Clarifai error response:', JSON.stringify(cfJson));
+      const msg =
+        cfJson?.status?.description ||
+        cfJson?.status?.details ||
+        'Clarifai recognition failed.';
+      return res.status(502).json({ error: msg });
+    }
+
+    const concepts = cfJson.outputs[0]?.data?.concepts || [];
+    if (!concepts.length) {
+      return res.status(200).json({ name: 'Unknown dish', confidence: 0 });
+    }
+
+    const top = concepts[0]; // highest probability concept
+    res.json({ name: top.name, confidence: top.value });
+  } catch (err) {
+    console.error('POST /api/recognize error:', err);
+    res.status(500).json({ error: 'Recognition failed.' });
+  }
+});
+
+app.listen(port, () => {
+  console.log(`✅ Server running on http://localhost:${port}`);
+});
