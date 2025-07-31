@@ -1,12 +1,12 @@
 // src/pages/ResultsDisplay.jsx
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import '../styles/App.css';
 
-// Use the backend proxy first to avoid hotlink/CORS issues
+// Image proxy for hotlink protection
 const proxySrc = (url) =>
   `http://localhost:5000/api/img?u=${encodeURIComponent(url)}`;
 
-// Lightweight inline placeholder (no network)
 const FALLBACK_PLACEHOLDER =
   'data:image/svg+xml;utf8,' +
   encodeURIComponent(
@@ -18,17 +18,6 @@ const FALLBACK_PLACEHOLDER =
       </text>
     </svg>`
   );
-
-// Strict image sizing: contains inside a sensible box and centers it
-const imgStyle = {
-  width: '100%',
-  maxWidth: '720px',   // cap width on large screens
-  maxHeight: '420px',  // keep a short-ish aspect height
-  objectFit: 'contain',
-  display: 'block',
-  margin: '1rem auto',
-  borderRadius: '8px',
-};
 
 const ResultsDisplay = () => {
   const [searchParams] = useSearchParams();
@@ -44,9 +33,7 @@ const ResultsDisplay = () => {
         setLoading(true);
         setError('');
         const response = await fetch(
-          `http://localhost:5000/api/foods?name=${encodeURIComponent(
-            dishName
-          )}&page=${page}&limit=5`
+          `http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}&page=${page}&limit=5`
         );
         if (!response.ok) throw new Error('No results found.');
         const data = await response.json();
@@ -70,7 +57,7 @@ const ResultsDisplay = () => {
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
-    <div className="bg-white p-6 rounded shadow-md">
+    <div className="results">
       {dishes.length === 0 ? (
         <p>No results found for "{dishName}".</p>
       ) : (
@@ -80,128 +67,91 @@ const ResultsDisplay = () => {
           const proxiedUrl = originalUrl ? proxySrc(originalUrl) : '';
 
           return (
-            <div key={key} className="mb-8 border-b pb-6">
-              <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
+            <div className="split-page" key={key}>
+              {/* Right side: Dish Info */}
+              <div className="right-side">
+                <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
+                <p>This dish information is provided by an AI model and may not be 100% accurate.</p>
 
-              {/* Image: try proxy -> direct -> inline placeholder (all with strict sizing) */}
-              {originalUrl ? (
-                <img
-                  src={proxiedUrl}
-                  alt={dish.name}
-                  style={imgStyle}
-                  loading="lazy"
-                  decoding="async"
-                  referrerPolicy="no-referrer"
-                  onError={(e) => {
-                    // Step 1: if the proxy fails, try direct URL once
-                    if (!e.currentTarget.dataset.triedDirect) {
-                      e.currentTarget.dataset.triedDirect = '1';
-                      e.currentTarget.src = originalUrl;
-                      return;
-                    }
-                    // Step 2: if direct fails too, show inline placeholder
-                    if (e.currentTarget.src !== FALLBACK_PLACEHOLDER) {
-                      e.currentTarget.src = FALLBACK_PLACEHOLDER;
-                    }
-                  }}
-                />
-              ) : (
-                <img
-                  src={FALLBACK_PLACEHOLDER}
-                  alt="No image available"
-                  style={imgStyle}
-                />
-              )}
-
-              <div className="mt-3 space-y-1">
-                {dish.origin && (
-                  <p>
-                    <strong>Origin:</strong> {dish.origin}
-                  </p>
-                )}
-                {dish.region && (
-                  <p>
-                    <strong>Region:</strong> {dish.region}
-                  </p>
-                )}
+                {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
+                {dish.region && <p><strong>Region:</strong> {dish.region}</p>}
                 {dish.description && <p>{dish.description}</p>}
+
+                {Array.isArray(dish.ingredients) && dish.ingredients.length > 0 && (
+                  <div className="mt-2">
+                    <h3 className="font-semibold">Ingredients:</h3>
+                    <ul className="list-disc list-inside">
+                      {dish.ingredients.map((ing, idx) => (
+                        <li key={idx}>{ing}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {dish.culture && <p><strong>Cultural Context:</strong> {dish.culture}</p>}
+                {Array.isArray(dish.dietary) && dish.dietary.length > 0 && (
+                  <p><strong>Dietary:</strong> {dish.dietary.join(', ')}</p>
+                )}
+                {Array.isArray(dish.tags) && dish.tags.length > 0 && (
+                  <p><strong>Tags:</strong> {dish.tags.join(', ')}</p>
+                )}
+                {Array.isArray(dish.sources) && dish.sources.length > 0 && (
+                  <div className="mt-2">
+                    <strong>Sources:</strong>{' '}
+                    {dish.sources.map((url, i) => (
+                      <a
+                        key={`${key}-src-${i}`}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 underline mr-2"
+                      >
+                        {(() => {
+                          try {
+                            return new URL(url).hostname;
+                          } catch {
+                            return url;
+                          }
+                        })()}
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {dish.nutrition && (
+                  <div className="mt-3">
+                    <h3 className="font-semibold">Nutrition (approx.):</h3>
+                    <ul className="list-disc list-inside">
+                      {dish.nutrition.calories != null && <li>Calories: {dish.nutrition.calories}</li>}
+                      {dish.nutrition.protein && <li>Protein: {dish.nutrition.protein}</li>}
+                      {dish.nutrition.carbs && <li>Carbs: {dish.nutrition.carbs}</li>}
+                      {dish.nutrition.fat && <li>Fat: {dish.nutrition.fat}</li>}
+                    </ul>
+                  </div>
+                )}
               </div>
 
-              {Array.isArray(dish.aliases) && dish.aliases.length > 0 && (
-                <p className="mt-2">
-                  <strong>Also known as:</strong> {dish.aliases.join(', ')}
-                </p>
-              )}
-
-              {Array.isArray(dish.ingredients) && dish.ingredients.length > 0 && (
-                <div className="mt-3">
-                  <h3 className="font-semibold">Ingredients:</h3>
-                  <ul className="list-disc ml-6">
-                    {dish.ingredients.map((ing, idx) => (
-                      <li key={idx}>{ing}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {Array.isArray(dish.dietary) && dish.dietary.length > 0 && (
-                <p className="mt-2">
-                  <strong>Dietary:</strong> {dish.dietary.join(', ')}
-                </p>
-              )}
-
-              {dish.culture && (
-                <p className="mt-2">
-                  <strong>Cultural Context:</strong> {dish.culture}
-                </p>
-              )}
-
-              {Array.isArray(dish.tags) && dish.tags.length > 0 && (
-                <p className="mt-2">
-                  <strong>Tags:</strong> {dish.tags.join(', ')}
-                </p>
-              )}
-
-              {Array.isArray(dish.sources) && dish.sources.length > 0 && (
-                <div className="mt-2">
-                  <strong>Sources:</strong>{' '}
-                  {dish.sources.map((url, i) => (
-                    <a
-                      key={`${key}-src-${i}`}
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-600 underline mr-2"
-                    >
-                      {(() => {
-                        try {
-                          return new URL(url).hostname;
-                        } catch {
-                          return url;
-                        }
-                      })()}
-                    </a>
-                  ))}
-                </div>
-              )}
-
-              {dish.nutrition && (
-                <div className="mt-3">
-                  <h3 className="font-semibold">Nutrition (approx.):</h3>
-                  <ul className="list-disc ml-6">
-                    {dish.nutrition.calories != null && (
-                      <li>Calories: {dish.nutrition.calories}</li>
-                    )}
-                    {dish.nutrition.protein && (
-                      <li>Protein: {dish.nutrition.protein}</li>
-                    )}
-                    {dish.nutrition.carbs && (
-                      <li>Carbs: {dish.nutrition.carbs}</li>
-                    )}
-                    {dish.nutrition.fat && <li>Fat: {dish.nutrition.fat}</li>}
-                  </ul>
-                </div>
-              )}
+              {/* Left side: Dish image */}
+              <div className="left-side">
+                {dish.image ? (
+                  <img
+                    src={proxiedUrl}
+                    alt={dish.name || "Dish"}
+                    className="image-preview"
+                    style={{ objectFit: 'cover', width: '100%', maxWidth: '600px', borderRadius: '8px' }}
+                    onError={(e) => {
+                      if (!e.currentTarget.dataset.triedDirect && dish.image) {
+                        e.currentTarget.dataset.triedDirect = '1';
+                        e.currentTarget.src = dish.image;
+                        return;
+                      }
+                      e.currentTarget.src = FALLBACK_PLACEHOLDER;
+                    }}
+                  />
+                ) : (
+                  <h1>No image available</h1>
+                )}
+              </div>
             </div>
           );
         })
