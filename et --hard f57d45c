@@ -1,0 +1,36 @@
+[33m638d5172[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m h
+[33me7d78071[m[33m ([m[1;31mupstream/main[m[33m, [m[1;31mupstream/HEAD[m[33m)[m Merge pull request #8 from ArslanTheGreat/main
+[33me08fb324[m Merge branch 'main' into main
+[33m4280aa15[m Merge pull request #7 from danyellepalmore/front-end-experiment
+[33m2a53034e[m update
+[33mc3aeff49[m More AI
+[33m97717a4c[m AI integration
+[33m298f45f6[m[33m ([m[1;31mupstream/front-end-experiment[m[33m)[m Added css to results page
+[33mbe511e56[m Included CSS change for suggestions dropdown
+[33m84990e59[m Merge pull request #6 from ArslanTheGreat/main
+[33m3e2718b7[m mongo update
+[33m227940d6[m Delete https!github.com!danyellepalmore!Global-Food-Wiki.git
+[33m05fa8de1[m edits to backend
+[33m7dd8b875[m Merge branch 'main' of https://github.com/ArslanTheGreat/Global-Food-Wiki-backend-fork
+[33m450fcfe5[m backend
+[33mc9006d4c[m Delete CNAME
+[33m07365d7a[m Update CNAME
+[33m40ef1e6c[m Create CNAME
+[33mb448d6a6[m Improved bio section
+[33ma53cf83d[m Added Search button to ResultsPage
+[33m0117cabd[m Improved image resize on upload
+[33m5449069e[m Added logic to view image on results page
+[33m2fafebee[m Save local edits before pulling
+[33m7ae63beb[m Edit feedback page formatting
+[33m9a2e62b4[m Replace entire repo with local version and restructure folders
+[33m2ad81894[m Improve bio section and added section divider for split layout
+[33m6d512057[m Refactor project structure into modular folders
+[33m3806aae1[m Added logo into src folder
+[33md4389246[m Fixed src for logo in header
+[33mb8e1a729[m Merge branch 'main' of https://github.com/danyellepalmore/Global-Food-Wiki
+[33m652c2042[m Added to Search box and image upload
+[33m2233d67e[m js file name change
+[33m4c1d4603[m Resolve merge conflict
+[33me97b95b0[m Merge branch 'main' of https://github.com/danyellepalmore/Global-Food-Wiki
+[33m2ce77715[m Initial commit
+[33m2a638333[m Initial commit
