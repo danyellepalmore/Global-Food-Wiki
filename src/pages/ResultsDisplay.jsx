@@ -1,10 +1,25 @@
-import React, { useEffect, useState } from 'react';
+// src/pages/ResultsDisplay.jsx
+import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import '../styles/App.css';
 
+// Image proxy for hotlink protection
+const proxySrc = (url) =>
+  `http://localhost:5000/api/img?u=${encodeURIComponent(url)}`;
 
+const FALLBACK_PLACEHOLDER =
+  'data:image/svg+xml;utf8,' +
+  encodeURIComponent(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400">
+      <rect width="100%" height="100%" fill="#f3f4f6"/>
+      <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+        fill="#6b7280" font-family="Arial, Helvetica, sans-serif" font-size="20">
+        Image unavailable
+      </text>
+    </svg>`
+  );
 
-const ResultsDisplay = ({uploadedImage}) => {
+const ResultsDisplay = () => {
   const [searchParams] = useSearchParams();
   const dishName = searchParams.get('name') || '';
   const [dishes, setDishes] = useState([]);
@@ -12,25 +27,30 @@ const ResultsDisplay = ({uploadedImage}) => {
   const [error, setError] = useState('');
   const [pagination, setPagination] = useState({ page: 1, pages: 1 });
 
-  const fetchData = async (page = 1) => {
-    try {
-      setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}&page=${page}&limit=5`);
-      if (!response.ok) throw new Error('No results found.');
-      const data = await response.json();
-      setDishes(data.results);
-      setPagination(data.pagination);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchData = useCallback(
+    async (page = 1) => {
+      try {
+        setLoading(true);
+        setError('');
+        const response = await fetch(
+          `http://localhost:5000/api/foods?name=${encodeURIComponent(dishName)}&page=${page}&limit=5`
+        );
+        if (!response.ok) throw new Error('No results found.');
+        const data = await response.json();
+        setDishes(data.results || []);
+        setPagination(data.pagination || { page: 1, pages: 1 });
+      } catch (err) {
+        setError(err.message || 'Error loading results.');
+      } finally {
+        setLoading(false);
+      }
+    },
+    [dishName]
+  );
 
-  //initial fetch when dish name appears
   useEffect(() => {
-    if (dishName) fetchData();
-  }, [dishName]);
+    if (dishName) fetchData(1);
+  }, [dishName, fetchData]);
 
   if (!dishName) return <p className="text-red-500">No dish name provided.</p>;
   if (loading) return <p>Loading...</p>;
@@ -38,50 +58,103 @@ const ResultsDisplay = ({uploadedImage}) => {
 
   return (
     <div className="results">
-      {/* Future addition: add search bar for re-search feature*/}
       {dishes.length === 0 ? (
         <p>No results found for "{dishName}".</p>
       ) : (
-        dishes.map((dish, index) => (
-          <div className='split-page' key={index}>
-          {/* Right section container for dish information */}
-            <div className='right-side'>
-              <div className='item-description'>
-                <h1>{dish.name}</h1>
-                <p>This dish information is provided by an API or AI model and is not guaranteed to be accurate.</p>
+        dishes.map((dish, index) => {
+          const key = dish._id || `${dish.name}-${index}`;
+          const originalUrl = dish.image || '';
+          const proxiedUrl = originalUrl ? proxySrc(originalUrl) : '';
 
-            {dish.image && <img src={dish.image} alt={dish.name} className="mt-4 w-full max-w-md rounded" />}
-            {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
-            {dish.description && <p>{dish.description}</p>}
-            {dish.ingredients?.length > 0 && (
-              <div className="mt-2">
-                <h3 className="font-semibold">Ingredients:</h3>
-                <ul className="list-disc list-inside">
-                  {dish.ingredients.map((ing, idx) => (
-                    <li key={idx}>{ing}</li>
-                  ))}
-                </ul>
+          return (
+            <div className="split-page" key={key}>
+              {/* Right side: Dish Info */}
+              <div className="right-side">
+                <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
+                <p>This dish information is provided by an AI model and may not be 100% accurate.</p>
+
+                {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
+                {dish.region && <p><strong>Region:</strong> {dish.region}</p>}
+                {dish.description && <p>{dish.description}</p>}
+
+                {Array.isArray(dish.ingredients) && dish.ingredients.length > 0 && (
+                  <div className="mt-2">
+                    <h3 className="font-semibold">Ingredients:</h3>
+                    <ul className="list-disc list-inside">
+                      {dish.ingredients.map((ing, idx) => (
+                        <li key={idx}>{ing}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {dish.culture && <p><strong>Cultural Context:</strong> {dish.culture}</p>}
+                {Array.isArray(dish.dietary) && dish.dietary.length > 0 && (
+                  <p><strong>Dietary:</strong> {dish.dietary.join(', ')}</p>
+                )}
+                {Array.isArray(dish.tags) && dish.tags.length > 0 && (
+                  <p><strong>Tags:</strong> {dish.tags.join(', ')}</p>
+                )}
+                {Array.isArray(dish.sources) && dish.sources.length > 0 && (
+                  <div className="mt-2">
+                    <strong>Sources:</strong>{' '}
+                    {dish.sources.map((url, i) => (
+                      <a
+                        key={`${key}-src-${i}`}
+                        href={url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-blue-600 underline mr-2"
+                      >
+                        {(() => {
+                          try {
+                            return new URL(url).hostname;
+                          } catch {
+                            return url;
+                          }
+                        })()}
+                      </a>
+                    ))}
+                  </div>
+                )}
+
+                {dish.nutrition && (
+                  <div className="mt-3">
+                    <h3 className="font-semibold">Nutrition (approx.):</h3>
+                    <ul className="list-disc list-inside">
+                      {dish.nutrition.calories != null && <li>Calories: {dish.nutrition.calories}</li>}
+                      {dish.nutrition.protein && <li>Protein: {dish.nutrition.protein}</li>}
+                      {dish.nutrition.carbs && <li>Carbs: {dish.nutrition.carbs}</li>}
+                      {dish.nutrition.fat && <li>Fat: {dish.nutrition.fat}</li>}
+                    </ul>
+                  </div>
+                )}
               </div>
-            )}
-            {dish.culture && <p><strong>Cultural Context:</strong> {dish.culture}</p>}
-          </div>
-          </div>
 
-      {/* ✅ Left section: Dish image or fallback */}
-            <div className="left-side">
-              {dish.image || uploadedImage ? (
-                <img
-                  src={dish.image || uploadedImage}
-                  alt={dish.name || "Uploaded dish"}
-                  className="image-preview"
-                  style={{ objectFit: "cover" }}
-                />
-              ) : (
-                <h1>No image uploaded</h1>
-              )}
+              {/* Left side: Dish image */}
+              <div className="left-side">
+                {dish.image ? (
+                  <img
+                    src={proxiedUrl}
+                    alt={dish.name || "Dish"}
+                    className="image-preview"
+                    style={{ objectFit: 'cover', width: '100%', maxWidth: '600px', borderRadius: '8px' }}
+                    onError={(e) => {
+                      if (!e.currentTarget.dataset.triedDirect && dish.image) {
+                        e.currentTarget.dataset.triedDirect = '1';
+                        e.currentTarget.src = dish.image;
+                        return;
+                      }
+                      e.currentTarget.src = FALLBACK_PLACEHOLDER;
+                    }}
+                  />
+                ) : (
+                  <h1>No image available</h1>
+                )}
+              </div>
             </div>
-          </div>
-        ))
+          );
+        })
       )}
 
       {/* Pagination Controls */}
@@ -93,7 +166,9 @@ const ResultsDisplay = ({uploadedImage}) => {
         >
           Previous
         </button>
-        <span>Page {pagination.page} of {pagination.pages}</span>
+        <span>
+          Page {pagination.page} of {pagination.pages}
+        </span>
         <button
           disabled={pagination.page >= pagination.pages}
           onClick={() => fetchData(pagination.page + 1)}
