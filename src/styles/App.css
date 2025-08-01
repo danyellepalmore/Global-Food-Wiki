@@ -42,9 +42,10 @@ body {
   font-family: sans-serif;
 }
 
-.results{
-  background-color: #283618;
-  border: #f0eeea solid 1px;
+.results {
+  background-color: white;
+  color: black;
+  border: 1px solid #ccc;
 }
 
 
@@ -238,3 +239,65 @@ button[type="submit"]:hover {
   font-weight: bold;
 }
 
+/* Search Style */
+.search-bar {
+  width: 100%; /* Full viewport width */
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  gap: 0;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+
+.dropdown,
+.search-input {
+  padding: 10px;
+  font-size: 16px;
+  min-width: 200px;
+  flex: 1;
+}
+
+.search-button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  margin-bottom: 10px;
+  background-color: #283618;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
+}
+.search-button:hover {
+  background-color: #218838;
+}
+/* End of search style */
+
+.suggestions-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background: white;
+  border: 1px solid #ccc;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  border-radius: 4px;
+  list-style: none;
+  padding: 0%;
+  margin: 0;
+}
+
+.suggestions-dropdown li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.suggestions-dropdown li:hover {
+  background-color: #f0f0f0;
+}
