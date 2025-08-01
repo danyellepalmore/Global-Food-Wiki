@@ -17,3 +17,5 @@ Global Food Wiki is an AI-powered web application that helps users explore globa
    - Start frontend: `npm run dev` (or `npm start`)
 
 [Final Demo.pptx](https://github.com/user-attachments/files/21539622/Final.Demo.pptx)
+
+![App Demo](demo.gif)
