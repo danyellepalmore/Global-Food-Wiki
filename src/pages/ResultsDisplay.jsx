@@ -1,9 +1,10 @@
-// src/pages/ResultsDisplay.jsx
+
 import React, { useEffect, useState, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import '../styles/App.css';
+import SearchBar from '../components/SearchBar';
+import sampleData from '../data/sampleData'; // only used for placeholder search bar props
 
-// Image proxy for hotlink protection
 const proxySrc = (url) =>
   `http://localhost:5000/api/img?u=${encodeURIComponent(url)}`;
 
@@ -57,7 +58,22 @@ const ResultsDisplay = () => {
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
-    <div className="results text-black">
+    <div className="results" style={{ backgroundColor: '#283618', color: '#f0eeea' }}>
+      <div className="search-bar">
+        <SearchBar data={sampleData} />
+        <select className="dropdown">
+          <option value="">Select Language or Region</option>
+          <option value="english">English</option>
+          <option value="spanish">Spanish</option>
+          <option value="hindi">Hindi</option>
+          <option value="chinese">Chinese</option>
+          <option value="arabic">Arabic</option>
+          <option value="african_american">African American</option>
+          <option value="latino">Latino</option>
+          <option value="native_american">Native American</option>
+        </select>
+        <button className="search-button">Search</button>
+      </div>
       {dishes.length === 0 ? (
         <p>No results found for "{dishName}".</p>
       ) : (
@@ -68,70 +84,70 @@ const ResultsDisplay = () => {
 
           return (
             <div className="split-page" key={key}>
-              {/* Right side: Dish Info */}
               <div className="right-side">
-                <h2 className="text-2xl font-bold mb-2">{dish.name}</h2>
-                <p>This dish information is provided by an AI model and may not be 100% accurate.</p>
+                <div className="item-description">
+                  <h1 className="result-header">{dish.name}</h1>
+                  <p>This dish information is provided by an AI model and may not be 100% accurate.</p>
 
-                {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
-                {dish.region && <p><strong>Region:</strong> {dish.region}</p>}
-                {dish.description && <p>{dish.description}</p>}
+                  {dish.origin && <p><strong>Origin:</strong> {dish.origin}</p>}
+                  {dish.region && <p><strong>Region:</strong> {dish.region}</p>}
+                  {dish.description && <p>{dish.description}</p>}
 
-                {Array.isArray(dish.ingredients) && dish.ingredients.length > 0 && (
-                  <div className="mt-2">
-                    <h3 className="font-semibold">Ingredients:</h3>
-                    <ul className="list-disc list-inside">
-                      {dish.ingredients.map((ing, idx) => (
-                        <li key={idx}>{ing}</li>
+                  {Array.isArray(dish.ingredients) && dish.ingredients.length > 0 && (
+                    <div className="mt-2">
+                      <h3>Ingredients:</h3>
+                      <ul className="list-disc list-inside">
+                        {dish.ingredients.map((ing, idx) => (
+                          <li key={idx}>{ing}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {dish.culture && <p><strong>Cultural Context:</strong> {dish.culture}</p>}
+                  {Array.isArray(dish.dietary) && dish.dietary.length > 0 && (
+                    <p><strong>Dietary:</strong> {dish.dietary.join(', ')}</p>
+                  )}
+                  {Array.isArray(dish.tags) && dish.tags.length > 0 && (
+                    <p><strong>Tags:</strong> {dish.tags.join(', ')}</p>
+                  )}
+                  {Array.isArray(dish.sources) && dish.sources.length > 0 && (
+                    <div className="mt-2">
+                      <strong>Sources:</strong>{' '}
+                      {dish.sources.map((url, i) => (
+                        <a
+                          key={`${key}-src-${i}`}
+                          href={url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-300 underline mr-2"
+                        >
+                          {(() => {
+                            try {
+                              return new URL(url).hostname;
+                            } catch {
+                              return url;
+                            }
+                          })()}
+                        </a>
                       ))}
-                    </ul>
-                  </div>
-                )}
+                    </div>
+                  )}
 
-                {dish.culture && <p><strong>Cultural Context:</strong> {dish.culture}</p>}
-                {Array.isArray(dish.dietary) && dish.dietary.length > 0 && (
-                  <p><strong>Dietary:</strong> {dish.dietary.join(', ')}</p>
-                )}
-                {Array.isArray(dish.tags) && dish.tags.length > 0 && (
-                  <p><strong>Tags:</strong> {dish.tags.join(', ')}</p>
-                )}
-                {Array.isArray(dish.sources) && dish.sources.length > 0 && (
-                  <div className="mt-2">
-                    <strong>Sources:</strong>{' '}
-                    {dish.sources.map((url, i) => (
-                      <a
-                        key={`${key}-src-${i}`}
-                        href={url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-600 underline mr-2"
-                      >
-                        {(() => {
-                          try {
-                            return new URL(url).hostname;
-                          } catch {
-                            return url;
-                          }
-                        })()}
-                      </a>
-                    ))}
-                  </div>
-                )}
-
-                {dish.nutrition && (
-                  <div className="mt-3">
-                    <h3 className="font-semibold">Nutrition (approx.):</h3>
-                    <ul className="list-disc list-inside">
-                      {dish.nutrition.calories != null && <li>Calories: {dish.nutrition.calories}</li>}
-                      {dish.nutrition.protein && <li>Protein: {dish.nutrition.protein}</li>}
-                      {dish.nutrition.carbs && <li>Carbs: {dish.nutrition.carbs}</li>}
-                      {dish.nutrition.fat && <li>Fat: {dish.nutrition.fat}</li>}
-                    </ul>
-                  </div>
-                )}
+                  {dish.nutrition && (
+                    <div className="mt-3">
+                      <h3>Nutrition (approx.):</h3>
+                      <ul className="list-disc list-inside">
+                        {dish.nutrition.calories != null && <li>Calories: {dish.nutrition.calories}</li>}
+                        {dish.nutrition.protein && <li>Protein: {dish.nutrition.protein}</li>}
+                        {dish.nutrition.carbs && <li>Carbs: {dish.nutrition.carbs}</li>}
+                        {dish.nutrition.fat && <li>Fat: {dish.nutrition.fat}</li>}
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Left side: Dish image */}
               <div className="left-side">
                 {dish.image ? (
                   <img
@@ -157,7 +173,6 @@ const ResultsDisplay = () => {
         })
       )}
 
-      {/* Pagination Controls */}
       <div className="flex justify-center gap-4 mt-6">
         <button
           disabled={pagination.page <= 1}

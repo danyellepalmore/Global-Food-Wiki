@@ -106,7 +106,9 @@ body {
 .suggestions-dropdown li {
   padding: 10px;
   cursor: pointer;
+  color: black;
 }
+
 
 .suggestions-dropdown li:hover {
   background-color: #f0f0f0;
@@ -300,4 +302,36 @@ button[type="submit"]:hover {
 
 .suggestions-dropdown li:hover {
   background-color: #f0f0f0;
+}
+
+/* Results page */
+.item-description {
+  color: #f0eeea;
+}
+.result-header, h3{
+  font-size: large;
+  font-weight: bold;
+}
+
+/* Results Page Specific */
+.results {
+  background-color: #283618;
+  color: #f0eeea;
+  padding: 20px;
+}
+
+.item-description {
+  color: #f0eeea;
+}
+
+.result-header,
+h3 {
+  font-size: large;
+  font-weight: bold;
+}
+
+.left-side img,
+.image-preview {
+  object-fit: cover;
+  border-radius: 8px;
 }
