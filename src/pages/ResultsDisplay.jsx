@@ -57,7 +57,7 @@ const ResultsDisplay = () => {
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
   return (
-    <div className="results">
+    <div className="results text-black">
       {dishes.length === 0 ? (
         <p>No results found for "{dishName}".</p>
       ) : (
